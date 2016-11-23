@@ -31,4 +31,23 @@ orderTable <- function(x, a){
   return(t)
 }
 
+summaryTable <- function(ta){
+  
+  med15 <- round(median(ta$aika15), digits = 3)
+  med16 <- round(median(ta$aika16), digits = 3)
+  
+  mean15 <- round(mean(ta$aika15), digits = 3)
+  mean16 <- round(mean(ta$aika16), digits = 3)
+  
+  sij15 <- round(median(ta$sij15),digits = 1)
+  sij16 <- round(median(ta$sij16), digits = 1)
+  
+  t15 <- c(med15, mean15, sij15)
+  t16 <- c(med16, mean16, sij16)
+  
+  t <- data.frame(t15, t16, row.names = c("median", "mean", "rank"))
+  colnames(t) <- c("2015", "2016")
+  return(t)
+}
+
 #runners2 <- runners[order(runners$suhtTimeDif, decreasing = TRUE),]

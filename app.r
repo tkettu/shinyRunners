@@ -19,9 +19,9 @@ d <- ggplot(runners)
 d15 <- geom_density(aes(x1), colour="blue")
 d16 <- geom_density(aes(y1), colour="red")
 
-
 #### Server side of shiny app ####
 server <- shinyServer(function(input, output) {
+  
   
   output$text <- renderText({
     paste("juoksija", input$select)
@@ -41,7 +41,16 @@ server <- shinyServer(function(input, output) {
   
   #### Density tab ####
   output$density <- renderPlot({
-    d + d15 + d16 + labs(x="Aika (h)", y = "tiheys")
+
+    n <- input$select
+    d + d15 + d16 + 
+      geom_point(aes(x=x1, y=0),colour=ifelse(runners$name== n, "blue", "white"),
+                 size=ifelse(runners$name== n, 3, 0),
+                 shape=ifelse(runners$name== n, 16, 32)) +
+      geom_point(aes(x=y1, y=0),colour=ifelse(runners$name== n, "red", "white"),
+                 size=ifelse(runners$name== n, 3, 1),
+                 shape=ifelse(runners$name== n, 16, 32)) +
+      labs(x="Aika (h)", y = "tiheys")
   })
   
   #### Data tab ####
@@ -84,6 +93,8 @@ server <- shinyServer(function(input, output) {
 
   })
 
+
+#### Client side ####
 library(shinythemes)
 
 ui <- shinyUI(fluidPage(theme = shinytheme("superhero"),
@@ -111,12 +122,12 @@ ui <- shinyUI(fluidPage(theme = shinytheme("superhero"),
                       #h3(textOutput("text")),
                       tabsetPanel(
                         #### chatter plot ####
-                        tabPanel("Plot", plotOutput("runnersPl"),
+                        tabPanel("Ajat", plotOutput("runnersPl"),
                                  textOutput("selite")),
                         #### Density ####
-                        tabPanel("density", plotOutput("density")),
+                        tabPanel("Jakauma", plotOutput("density")),
                         #### Summary ####
-                        tabPanel("Summary", tableOutput("sumTable"),
+                        tabPanel("Kooste", tableOutput("sumTable"),
                                  textOutput("relTimeDifMed"),
                                  textOutput("relTimeDifMean")
                                  
